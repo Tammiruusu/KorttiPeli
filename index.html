@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/Deck.js"></script>
+    <script src="./js/Player.js"></script>
+    <title>Kortti peli</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap');
+    </style>
+
+</head>
+<body>
+
+
+    <header >
+
+        
+    <video autoplay muted loop playsinline id="headerVideo">
+    <source src="/CardGame/Videos/halloweenTown.mp4" type="video/mp4">
+    </video>
+
+
+    </header>
+<center>
+    <h1 id="otsikko">Tervetuloa pelaamaan korttipeliä</h1>
+
+    <form autocomplete="off">
+        <p>Anna nimesi</p>
+        
+        <input id="nameInput" oninput="checkInput()" type="text" name="firstName" placeholder="Nimi"> 
+        <br/>
+        
+        <!-- <button onclick="DealCards()">Jaa kortit</button>-->
+    </form>
+    <div id="betContainer">
+            <h2>Panos: </h2>
+            <span id="minus">-</span>
+            <p id="bet">1</p>
+            <span id="plus">+</span>
+        </div>
+    
+    <script>
+
+            document.getElementById("minus").addEventListener("click", function(){
+    
+                if(document.getElementById("bet").innerHTML > 1){
+                    document.getElementById("bet").innerHTML -= 1;
+                }
+            });
+            document.getElementById("plus").addEventListener("click", function(){
+    
+            if(document.getElementById("bet").innerHTML < 10){
+                document.getElementById("bet").innerHTML = 
+                Number(document.getElementById("bet").innerHTML) + 1;
+            }
+            });
+        
+        </script>
+
+
+    <button onclick="StartGame()" id="btnStart" disabled>Aloita peli</button><br/>
+
+
+    <h2>Rahat: </h2><h2 id="money"></h2>
+<!----
+    <p>Erottele pilkulla ne kortit, jotka haluat vaihtaa.</p>
+    <form>
+        <input id="cardInput" type="text" name="cards" placeholder="esim. 1,2,4">
+        <br/>
+        
+    </form>
+-->
+        <button onclick="ChangeCards()" id="btnChange" style="display: none;" disabled >Vaihda kortit</button>
+
+
+
+
+        <!-- Tehdään div:cards ja sen alle jokaiselle kortille oma 
+          div:card0 card1 card2 jne ja class="kortti". -->
+        <div id="cards">
+
+                <div onclick="SelectCard(0)" id="card0" class="card notLocked"></div>
+                <div onclick="SelectCard(1)" id="card1" class="card notLocked"></div>
+                <div onclick="SelectCard(2)" id="card2" class="card notLocked"></div>
+                <div onclick="SelectCard(3)" id="card3" class="card notLocked"></div>
+                <div onclick="SelectCard(4)" id="card4" class="card notLocked"></div>
+            </div>
+
+            <p id="voittoKäsi"></p>
+
+        </center>
+
+
+
+
+
+    <script>
+        
+        window.addEventListener('load', () => {
+        const h1 = document.getElementById('otsikko');
+        h1.classList.add('animate');
+        });
+
+
+
+//Tarkistaa, onko nimi annettu
+        
+        function checkInput() {
+            const input = document.getElementById("nameInput").value;
+            const button = document.getElementById("btnStart");
+
+            if (input.trim() === "") {
+            button.disabled = true;
+            } else {
+            button.disabled = false;
+            }
+            }
+
+
+
+
+    // Tee h3 id:bet, jossa panoksen määrä. Toisella puolella + ja toisella - painike. 
+    // Painikkeet kasvattaa tai vähentää panoksen määrää.
+
+
+    // Tee StartGame() metodi, joka luo pelaajan ja korttipakan.
+    // Pelaajan parametrit ovat nimi tekstikentästä, 5, luotu korttipakka, 100.
+
+
+
+
+    function StartGame(){
+    
+        if(typeof deck == "undefined" && typeof player == "undefined"){
+            deck = new Deck();
+            player = new Player(document.getElementById("nameInput").value, 5, deck, 100, 
+            document.getElementById("bet").innerHTML);
+            document.getElementById("btnChange").style.display = "inline-block";
+        }
+        deck.takenCards = [];
+        player.bet = document.getElementById("bet").innerHTML;
+        console.log("PELAAJAN RAHAT " + player.money + "PANOS: " + player.bet);
+        player.money -= player.bet;
+        console.log("PELAAJAN RAHAT " + player.money + "PANOS: " + player.bet);
+
+        deck.Deal(5, player);
+        document.getElementById("money").innerHTML = player.money;
+
+       
+//tarkistaa, jos pelaajan rahat ovat loppuneet, päivittää sivun
+        
+        if (player.money <= 0) {
+        alert("Rahat loppu!");
+        setTimeout(() => {
+            location.reload();
+        }, 2000); // 2 sekunnin viive
+        }
+
+
+       
+        // Otetaan lukitut kortit ja muutetaan ne ei lukituiksi
+        var lockedCards = document.getElementsByClassName("locked");
+        lockedCards = Array.from(lockedCards);
+
+        for (var i=0; i<lockedCards.length; i++){            
+            lockedCards[i].classList.remove("locked");
+            lockedCards[i].classList.add("notLocked");
+        }
+
+      // Vaihda napit päinvastaisiksi    
+        document.getElementById("btnStart").disabled = true;
+        document.getElementById("btnChange").disabled = false;
+
+        
+
+    }
+
+    function ChangeCards(){
+        //player.ChangeCards(document.getElementById("cardInput").value);
+
+        var idString ="";
+        var cardsToChange = document.getElementsByClassName("notLocked");
+        console.log(cardsToChange.length);
+        for (var i= 0; i<cardsToChange.length; i++){
+            
+            var CardID = cardsToChange[i].id.substr(4).toString();
+            idString +=CardID+",";
+            console.log("idString for loopissa: " + idString);
+        }
+        player.ChangeCards(idString);
+
+        
+  // Vaihda napit päinvastaisiksi
+        document.getElementById("btnChange").disabled = true;
+        document.getElementById("btnStart").disabled = false;
+
+    }
+
+    function SelectCard(id){
+
+        // Jos kortin class lista ei sisällä arvoa "locked", anna kortille class locked
+        // Väritä myös div taustaväri punaiseksi
+        // Jos taas class locked on jo olemassa laita taustaväri esim. siniseksi
+        // ja ota locked class pois
+
+        if(document.getElementById("card"+id).classList.contains("locked")){
+
+            document.getElementById("card"+id).classList.remove("locked");
+            document.getElementById("card"+id).classList.add("notLocked");
+           // document.getElementById("card"+id).style.backgroundColor = "red";
+        }else{
+            document.getElementById("card"+id).classList.remove("notLocked");
+            document.getElementById("card"+id).classList.add("locked");
+        }
+
+    }
+
+
+
+    </script>
+</body>
+</html>
