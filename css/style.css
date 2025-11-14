@@ -1,0 +1,125 @@
+body{
+
+    background-color: #361E36;
+    color: #E3674D;
+    font-family: "Jacquard 12", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1{
+    font-size: 40px;
+    border: 1px dashed;
+    border-radius: 15px;
+    padding: 15px;
+    text-align:center;
+    text-shadow: 2px 2px 4px black;
+    
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: all 1.5s ease;
+}
+
+
+h1.animate {
+      opacity: 1;
+      transform: translateY(0);
+      color: #E3674D;
+ }
+
+p {
+    font-size: 20px;
+    text-shadow: 2px 2px 4px black;
+
+}
+
+h2 {
+    font-size: 30px;
+    text-shadow: 2px 2px 4px black;
+}
+
+#headerVideo{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+#nameInput {
+    background-color: #94395A;
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    color: #FCC65C;
+    font-weight: bolder;
+    border-color: #FCC65C;
+    opacity: 70%;
+}
+
+#cards{
+
+    border: 1px dotted;
+    width: 1000px;
+    height: 400px;
+    display: flex;
+    
+
+}
+
+.card{
+    border: 1px #A27E8A solid;
+    width: 200px;
+    height: 400px;
+   
+}
+.locked{
+    background-color: #94395A;
+
+}
+
+#betContainer{
+    width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+#minus{
+    font: 30px verdana;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#bet{
+    font: 30px verdana;
+
+
+}
+
+#plus{
+    font: 30px verdana;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.card img{
+    width: 100%;
+}
+
+button {
+    background-color: #94395A;
+    border-radius: 15px;
+    color: #FCC65C;
+    border-color: #FCC65C;
+    padding: 10px;
+}
+
+button:disabled {
+    background-color: gray;
+    color: black;
+    border-color: rgb(61, 59, 59);
+}
+
+#cards {
+    margin-top: 20px;
+}
